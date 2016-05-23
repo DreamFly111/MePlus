@@ -309,6 +309,7 @@ public class BluetoothPresenter {
                 event.setDis4(U4_Dis);
                 event.setDis5(U5_Dis);
                 EventUtils.postEvent(event);
+                //测试提交
             }
         }
 
