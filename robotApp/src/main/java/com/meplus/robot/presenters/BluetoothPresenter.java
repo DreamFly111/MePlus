@@ -20,6 +20,8 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,12 +35,15 @@ import app.akexorcist.bluetotohspp.library.BluetoothSPP.BluetoothConnectionListe
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import hugo.weaving.DebugLog;
 
-public class BluetoothPresenter {
+public class BluetoothPresenter implements Handler.Callback{
     private static final String TAG = BluetoothPresenter.class.getSimpleName();
     private final static boolean ENABLE = true;
     private final int PERCENT = 42;
     private final int MAX = 500;
     private BluetoothSPP bt;
+
+    private Handler mHandler;
+    private int V =0;
 
     public BluetoothPresenter(Context context) {
         if (!ENABLE) return;
@@ -79,6 +84,9 @@ public class BluetoothPresenter {
             }
         });
         bt.setOnDataReceivedListener((data, message) -> receivedData(data, message));
+
+        mHandler = new Handler();
+        mHandler.sendEmptyMessageDelayed(1,200);
     }
 
     /**
@@ -154,7 +162,7 @@ public class BluetoothPresenter {
 
     public boolean sendDefault() {
         return setEn(true);
-    }
+    }//true表示开启，false表示关闭
 
     @DebugLog
     private boolean setEn(boolean enable) { //En：00-关闭自主避障，01-开启自主避障
@@ -191,7 +199,7 @@ public class BluetoothPresenter {
             return false;
         }
        /* final int V = (MAX * PERCENT / 100);*/
-        final int V = (MAX * PERCENT / 100);
+        //final int V = (MAX * PERCENT / 100);
 
         int V1 = 0;
         int V2 = 0;
@@ -337,4 +345,18 @@ public class BluetoothPresenter {
         EventUtils.postEvent(event);
     }
 
+
+    int i = 0;
+    final int[] Vtime = {42,84,126,168,210};
+    @Override
+    public boolean handleMessage(Message msg) {
+        if(i<=4){
+            V = Vtime[i++];
+            mHandler.sendEmptyMessageDelayed(1,200);
+        }else{
+            V=210;
+            mHandler.sendEmptyMessageDelayed(1,200);
+        }
+        return false;
+    }
 }
