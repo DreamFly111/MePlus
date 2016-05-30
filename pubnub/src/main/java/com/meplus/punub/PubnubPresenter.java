@@ -1,10 +1,12 @@
 package com.meplus.punub;
 
 import android.content.Context;
+import android.hardware.Camera;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.meplus.events.EventUtils;
+import com.meplus.punub.utils.FlagEvenet;
 import com.meplus.punub.utils.JsonUtils;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
@@ -50,8 +52,12 @@ public class PubnubPresenter {
                         if (!mPubnub.getUUID().equals(command.getSender())) {
                             Log.i(TAG, "delay :" + (System.currentTimeMillis() - command.getTimeStamp()));
                             final CommandEvent event = new CommandEvent();
-                            event.setCommand(command);
                             EventUtils.postEvent(event);
+                        }
+                        Command command1 = JsonUtils.readValue(message.toString(),Command.class);
+                        if(!mPubnub.getUUID().equals(command1.getSender())){
+                            final FlagEvenet flagEvenet = new FlagEvenet();
+                            EventUtils.postEvent(flagEvenet);
                         }
                     }
                 }
@@ -99,6 +105,18 @@ public class PubnubPresenter {
                 final ErrorEvent event = new ErrorEvent();
                 event.setCommand(command);
                 event.setErrorString(error.getErrorString());
+                EventUtils.postEvent(event);
+            }
+        });
+    }
+
+    public void publish(Context context, final Integer flag){
+        mPubnub.publish(mChannel,flag,new PNCallback(context){
+            @Override
+            public void successCallback(String channel, Object response) {
+                super.successCallback(channel, response);
+                final FlagEvenet event = new FlagEvenet();
+                event.setFlag(flag);
                 EventUtils.postEvent(event);
             }
         });

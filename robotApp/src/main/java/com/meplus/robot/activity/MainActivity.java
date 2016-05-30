@@ -31,6 +31,7 @@ import com.meplus.punub.PubnubPresenter;
 import com.meplus.robot.R;
 import com.meplus.robot.app.MPApplication;
 import com.meplus.robot.events.BluetoothEvent;
+import com.meplus.robot.events.FlagEvenet;
 import com.meplus.robot.presenters.BluetoothPresenter;
 import com.meplus.robot.viewholder.NavHeaderViewHolder;
 import com.meplus.robot.viewholder.QRViewHolder;
@@ -42,6 +43,7 @@ import com.meplus.speech.presents.TtsPresenter;
 import com.meplus.speech.presents.UnderstandPersenter;
 import com.meplus.utils.IntentUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -60,6 +62,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private static final int START_UNDERSTANDING = 2;
     private static final long START_SPEEKING_DELAY = 100;
     private static final long START_UNDERSTANDING_DELAY = 100;
+
+    //定义标记
+    private boolean flag ;
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -318,9 +323,23 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     }
                     break;
                 case Command.ACTION_CALL:
-                    if (!MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能在进入了
+//                   MPApplication.getsInstance().getIsInChannel();//本身为false
+                    if (!MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能在进入了(此时是可以进入的且唤醒)
+                        FlagEvenet flagEvenet = new FlagEvenet();
+                        flagEvenet.setFlag(0);
+                        Integer flag = flagEvenet.getFlag();
+                        EventBus.getDefault().post(flag);//flag为false
+                        mPubnubPresenter.publish(getApplicationContext(),flag);
+
+//                    if (MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能在进入了（此时可以进入，但唤醒不了）
                         AVOSRobot robot = MPApplication.getsInstance().getRobot();
                         startActivity(com.meplus.activity.IntentUtils.generateVideoIntent(this, mChannel, robot.getRobotId()));
+                        //设置flag,及时更新flag，传递给
+                        MPApplication.getsInstance().setIsInChannel(true);
+                        flagEvenet.setFlag(1);
+                        flag = flagEvenet.getFlag();
+                        EventBus.getDefault().post(flag);
+                        mPubnubPresenter.publish(getApplicationContext(),flag);
                     }
                     break;
                 case Command.ACTION_HOME:
