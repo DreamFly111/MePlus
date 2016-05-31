@@ -27,6 +27,7 @@ import com.meplus.presenters.AgoraPresenter;
 import com.meplus.punub.Command;
 import com.meplus.punub.CommandEvent;
 import com.meplus.punub.StateEvent;
+import com.meplus.punub.utils.FlagEvenet;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
