@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private static final long START_UNDERSTANDING_DELAY = 100;
 
     //定义标记
-    private boolean flag ;
+    private boolean flag;
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -121,7 +121,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         final AVOSRobot robot = MPApplication.getsInstance().getRobot();
         final String username = String.valueOf(robot.getRobotId()); // agora 中的用户名
         final String uuId = robot.getUUId();                        // pubnub 中的用户名
-        mChannel = robot.getUUId();                                 // pubnub 中的channel
+        mChannel = robot.getUUId();                                 // pubnub 中的channel,也是agora的房间号
 
         mAgoraPresenter.initAgora((AgoraApplication) getApplication(), username);
 
@@ -323,23 +323,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     }
                     break;
                 case Command.ACTION_CALL:
-//                   MPApplication.getsInstance().getIsInChannel();//本身为false
-                    if (!MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能在进入了(此时是可以进入的且唤醒)
-                        FlagEvenet flagEvenet = new FlagEvenet();
-                        flagEvenet.setFlag(0);
-                        Integer flag = flagEvenet.getFlag();
-                        EventBus.getDefault().post(flag);//flag为false
-                        mPubnubPresenter.publish(getApplicationContext(),flag);
-
+                    if (!MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能在进入了(此时是可以进入的且唤醒）
 //                    if (MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能在进入了（此时可以进入，但唤醒不了）
                         AVOSRobot robot = MPApplication.getsInstance().getRobot();
                         startActivity(com.meplus.activity.IntentUtils.generateVideoIntent(this, mChannel, robot.getRobotId()));
-                        //设置flag,及时更新flag，传递给
-                        MPApplication.getsInstance().setIsInChannel(true);
-                        flagEvenet.setFlag(1);
-                        flag = flagEvenet.getFlag();
-                        EventBus.getDefault().post(flag);
-                        mPubnubPresenter.publish(getApplicationContext(),flag);
                     }
                     break;
                 case Command.ACTION_HOME:

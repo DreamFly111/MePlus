@@ -19,9 +19,6 @@ public class Command {
     public String message;
     public long timeStamp;
 
-    //flag
-    public Integer flag;
-
     public Command() {// 必须要有无参数构造函数
     }
 
@@ -29,10 +26,6 @@ public class Command {
         this.sender = sender;
         this.message = message;
         this.timeStamp = System.currentTimeMillis();
-    }
-
-    public Command(Integer flag){
-        this.flag = flag;
     }
 
     public String getSender() {
@@ -58,9 +51,5 @@ public class Command {
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
     }
-
-    public void setFlag(Integer flag){this.flag = flag;}
-
-    public Integer getFlag(){return flag;}
 
 }

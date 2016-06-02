@@ -27,7 +27,6 @@ import com.meplus.presenters.AgoraPresenter;
 import com.meplus.punub.Command;
 import com.meplus.punub.CommandEvent;
 import com.meplus.punub.StateEvent;
-import com.meplus.punub.utils.FlagEvenet;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -57,9 +56,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private AgoraPresenter mAgoraPresenter = new AgoraPresenter();
     private String mChannel;
     private int mUserId;
-
-    //定义flag，测试
-    private Integer flag = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,12 +143,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @DebugLog
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFlagEvent(FlagEvenet evenet){
-       flag = evenet.getFlag();
-    }
-
-    @DebugLog
-    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommandEvent(CommandEvent event) {
         if (event.ok()) {
             final Command command = event.getCommand();
@@ -212,14 +202,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (view.getId()) {
             case R.id.fab:
                 final AVOSRobot robot = MPApplication.getsInstance().getRobot();
-                mPubnubPresenter.subscribe(getApplicationContext(), mChannel);
                 Snackbar.make(view, robot == null ? "绑定多我机器人吗？" : "唤醒多我机器人吗？", Snackbar.LENGTH_LONG).setAction("确定", v -> {
                     if (robot == null) {
                         startActivity(IntentUtils.generateIntent(this, BindRobotActivity.class));
-                    } else if (flag == 0) {
+                    } else{
                         mPubnubPresenter.publish(getApplicationContext(), Command.ACTION_CALL);
-                    } else if (flag == 1) {
-                        ToastUtils.show(this,"机器人正在通话，请稍后再连接");
                     }
                 }).show();
         }
