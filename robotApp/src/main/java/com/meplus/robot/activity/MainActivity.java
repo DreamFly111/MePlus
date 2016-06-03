@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -126,8 +127,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mAgoraPresenter.initAgora((AgoraApplication) getApplication(), username);
 
         mPubnubPresenter.initPubnub(uuId);
-        mPubnubPresenter.subscribe(getApplicationContext(), mChannel);
-
+        if(!TextUtils.isEmpty(mChannel)){
+            mPubnubPresenter.subscribe(getApplicationContext(),mChannel);
+        }
         mSpeechHandler = new Handler(this);
 
         mUnderstandPersenter.create(this);
@@ -324,7 +326,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     break;
                 case Command.ACTION_CALL:
                     if (!MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能在进入了(此时是可以进入的且唤醒）
-//                    if (MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能在进入了（此时可以进入，但唤醒不了）
+//                      if (MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能在进入了（此时可以进入，但唤醒不了）
                         AVOSRobot robot = MPApplication.getsInstance().getRobot();
                         startActivity(com.meplus.activity.IntentUtils.generateVideoIntent(this, mChannel, robot.getRobotId()));
                     }

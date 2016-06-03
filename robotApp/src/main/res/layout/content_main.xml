@@ -61,6 +61,8 @@
             android:layout_gravity="center"
             android:src="@drawable/listener01" />
 
+
+
         <TextView
             android:id="@+id/question_text"
             android:layout_width="fill_parent"
@@ -85,6 +87,20 @@
             android:lines="5"
             android:textColor="#ffffff"
             android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:background="@drawable/button_blue"
+            android:drawablePadding="10dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:minWidth="100dp"
+            android:textColor="@color/meWhite"
+            android:textSize="@dimen/meTitleSize" />
+
 
     </LinearLayout>
 

@@ -1,5 +1,8 @@
 package com.meplus.robot.activity;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -89,9 +92,13 @@ public class LogoActivity extends BaseActivity implements Handler.Callback {
     @DebugLog
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSaveEvent(SaveEvent<AVOSRobot> event) {
-        if (event.ok()) {
+        if (event.ok()) {//判断是否已经连接WiFi
             MPApplication.getsInstance().setRobot(event.getData());
             startActivity(IntentUtils.generateIntent(this, MainActivity.class));
+            finish();
+        }else{
+            MPApplication.getsInstance().setRobot(event.getData());
+            startActivity(IntentUtils.generateIntent(this,OffLineActivity.class));
             finish();
         }
     }
@@ -110,4 +117,18 @@ public class LogoActivity extends BaseActivity implements Handler.Callback {
         // super.onBackPressed();
     }
 
+   /* //判断是否已经连接WiFi
+    public static boolean isWifiConnected(Context context)
+    {
+        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if(wifiNetworkInfo.isConnected())
+        {
+            return true ;
+        }
+
+        return false ;
+    }
+
+*/
 }

@@ -4,7 +4,8 @@
     package="com.meplus.robot">
 
     <uses-sdk tools:overrideLibrary="com.facebook.shimmer" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".app.MPApplication"
@@ -18,19 +19,21 @@
             android:value="3193935cc8df0170d8e975183cbec4b0" />
 
         <activity
-            android:name=".activity.LogoActivity"
+            android:name=".activity.SplashActivity"
             android:screenOrientation="landscape"
             android:theme="@style/StartAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
 
-                <!--<category android:name="android.intent.category.HOME" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
+
+            <!-- <category android:name="android.intent.category.HOME" /> -->
+            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".activity.ModifyActivity"
@@ -62,12 +65,17 @@
         <activity
             android:name="com.meplus.avos.activity.FeedbackActivity"
             android:screenOrientation="landscape" />
+
         <receiver android:name=".BroadCastReceiver.BroadCastReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-</application>
+
+        <activity android:name=".activity.OffLineActivity" />
+        <activity android:name=".activity.SplashActivity"></activity>
+    </application>
 
 </manifest>
