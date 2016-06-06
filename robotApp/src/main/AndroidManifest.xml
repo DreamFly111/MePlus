@@ -19,7 +19,7 @@
             android:value="3193935cc8df0170d8e975183cbec4b0" />
 
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".activity.LogoActivity"
             android:screenOrientation="landscape"
             android:theme="@style/StartAppTheme">
             <intent-filter>

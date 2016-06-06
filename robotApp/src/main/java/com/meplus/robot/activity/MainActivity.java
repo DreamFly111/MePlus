@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.avos.avoscloud.AVException;
 import com.meplus.activity.BaseActivity;
 import com.meplus.avos.objects.AVOSRobot;
 import com.meplus.events.EventUtils;
@@ -31,6 +33,7 @@ import com.meplus.punub.CommandEvent;
 import com.meplus.punub.PubnubPresenter;
 import com.meplus.robot.R;
 import com.meplus.robot.app.MPApplication;
+import com.meplus.robot.avos.Robot;
 import com.meplus.robot.events.BluetoothEvent;
 import com.meplus.robot.events.FlagEvenet;
 import com.meplus.robot.presenters.BluetoothPresenter;
@@ -65,7 +68,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private static final long START_UNDERSTANDING_DELAY = 100;
 
     //定义标记
-    private boolean flag;
+    private boolean flag = true;
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -325,10 +328,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     }
                     break;
                 case Command.ACTION_CALL:
-                    if (!MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能在进入了(此时是可以进入的且唤醒）
-//                      if (MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能在进入了（此时可以进入，但唤醒不了）
+
+                    try {
+                        //AVOSRobot robot = AVOSRobot.queryRobotByUUID(MPApplication.getsInstance().getRobot().getUUId()).get(0);
+                        AVOSRobot robot = MPApplication.getsInstance().getRobot();
+                        flag = robot.getRobotFlag();
+                        Log.i("flag",flag+"#");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if ((!MPApplication.getsInstance().getIsInChannel()) && (flag)) { // 如果正在通电话那么就不能再进入了(此时是可以进入的且唤醒）
+//                      if (MPApplication.getsInstance().getIsInChannel()) { // 如果正在通电话那么就不能再进入了（此时可以进入，但唤醒不了）
                         AVOSRobot robot = MPApplication.getsInstance().getRobot();
                         startActivity(com.meplus.activity.IntentUtils.generateVideoIntent(this, mChannel, robot.getRobotId()));
+                        MPApplication.getsInstance().getRobot().setRobotFlag(false);//进入之后把flag设置为false，即不允许再进入
                     }
                     break;
                 case Command.ACTION_HOME:

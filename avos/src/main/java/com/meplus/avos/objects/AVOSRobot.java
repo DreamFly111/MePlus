@@ -16,6 +16,8 @@ public class AVOSRobot extends AVObject {
     private final static String KEY_ROBOT_NAME = "robotName"; // String
     private final static String KEY_ROBOT_DESCRIPTION = "robotDescription"; // String
 
+    private final static String KEY_ROBOT_FLAG = "flag";//String
+
     public String getUUId() {
         return getString(KEY_ROBOT_UUID);
     }
@@ -46,6 +48,12 @@ public class AVOSRobot extends AVObject {
 
     public void setRobotDescription(String robotDescription) {
         put(KEY_ROBOT_DESCRIPTION, robotDescription);
+    }
+
+    public boolean getRobotFlag(){return getBoolean(KEY_ROBOT_FLAG);}
+
+    public void setRobotFlag(boolean flag){
+        put(KEY_ROBOT_FLAG,flag);
     }
 
     public static void registerSubclass() {

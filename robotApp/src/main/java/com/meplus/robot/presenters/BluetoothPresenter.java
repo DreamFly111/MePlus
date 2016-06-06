@@ -25,6 +25,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.avos.avoscloud.LogUtil;
 import com.meplus.events.EventUtils;
 import com.meplus.punub.Command;
 import com.meplus.robot.activity.DeviceListActivity;
@@ -43,7 +44,7 @@ public class BluetoothPresenter implements Handler.Callback{
     private BluetoothSPP bt;
 
     private Handler mHandler;
-    private int V =0;
+    private int V = 0 ;
 
     public BluetoothPresenter(Context context) {
         if (!ENABLE) return;
@@ -161,7 +162,7 @@ public class BluetoothPresenter implements Handler.Callback{
     }
 
     public boolean sendDefault() {
-        return setEn(true);
+        return setEn(false);
     }//true表示开启，false表示关闭
 
     @DebugLog
@@ -198,8 +199,10 @@ public class BluetoothPresenter implements Handler.Callback{
         if (!isConnected()) {
             return false;
         }
-       /* final int V = (MAX * PERCENT / 100);*/
-        //final int V = (MAX * PERCENT / 100);
+
+//        final int V = (MAX * PERCENT / 100);
+
+        int changeV = getV();
 
         int V1 = 0;
         int V2 = 0;
@@ -210,20 +213,25 @@ public class BluetoothPresenter implements Handler.Callback{
         byte CheckSum;
 
         if (action.equals(Command.ACTION_UP)) {
-            V1 = V * 3 / 2;
-            V2 = V * 3 / 2;
+            V1 = changeV * 3 / 2;
+            V2 = changeV * 3 / 2;
+            Log.i("test","up"+changeV);
         } else if (action.equals(Command.ACTION_DOWN)) {
-            V1 = -V;
-            V2 = -V;
+            V1 = -changeV;
+            V2 = -changeV;
+            Log.i("test","down"+changeV);
         } else if (action.equals(Command.ACTION_LEFT)) {
-            V1 = -V / 2;
-            V2 = V / 2;
+            V1 = -changeV / 2;
+            V2 = changeV / 2;
+            Log.i("test","left"+changeV);
         } else if (action.equals(Command.ACTION_RIGHT)) {
-            V1 = V / 2;
-            V2 = -V / 2;
+            V1 = changeV / 2;
+            V2 = -changeV / 2;
+            Log.i("right","right"+changeV);
         } else if (action.equals(Command.ACTION_STOP)) {
             V1 = 0;
             V2 = 0;
+            i=0;
         }
 
         V1H = (byte) (V1 >> 8);
@@ -345,17 +353,32 @@ public class BluetoothPresenter implements Handler.Callback{
         EventUtils.postEvent(event);
     }
 
-
     int i = 0;
     final int[] Vtime = {42,84,126,168,210};
+
+    public int getV(){
+        //V = 0;
+        //i = 0;
+        final int[] Vtime = {42,84,126,168,210};
+        mHandler = new Handler(this);
+        mHandler.sendEmptyMessageDelayed(1,200);
+        return V;
+    }
+
     @Override
     public boolean handleMessage(Message msg) {
-        if(i<=4){
-            V = Vtime[i++];
-            mHandler.sendEmptyMessageDelayed(1,200);
-        }else{
-            V=210;
-            mHandler.sendEmptyMessageDelayed(1,200);
+
+        if (msg.what == 1) {
+            if(i<4) {
+                i++;
+                V = Vtime[i];
+                Log.i("test",i+"*"+V+"@");
+                mHandler.sendEmptyMessageDelayed(1,200);
+            }else{
+                V = Vtime[4];
+                Log.i("test", i + "@@@" + V + "@@@");
+                mHandler.sendEmptyMessageDelayed(1,200);
+            }
         }
         return false;
     }
