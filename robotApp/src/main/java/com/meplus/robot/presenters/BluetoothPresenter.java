@@ -87,7 +87,7 @@ public class BluetoothPresenter implements Handler.Callback{
         bt.setOnDataReceivedListener((data, message) -> receivedData(data, message));
 
         mHandler = new Handler();
-        mHandler.sendEmptyMessageDelayed(1,200);
+        mHandler.sendEmptyMessageDelayed(1,1000);
     }
 
     /**
@@ -174,10 +174,16 @@ public class BluetoothPresenter implements Handler.Callback{
         }
         final byte En = (byte) (enable ? 0X01 : 00);
         // 自主避障功能使能（默认关闭）
-        byte CheckSum = (byte) (0X66 + (byte) 0XAA + 0X09 + 0X10 + En);
-        byte[] buffer = new byte[]{0X66, (byte) 0XAA, 0X09, 0X10, En, 00, 00, 00, CheckSum};
+
+        byte CheckSum = (byte) (0X66 + (byte) 0XAA + 0X0B + 0X10 + En);
+        byte[] buffer = new byte[]{0X66, (byte) 0XAA, 0X0B, 0X10, En, 00, 00, 00,00,00, CheckSum};
         sendData(buffer);
         return true;
+
+        /*byte CheckSum = (byte) (0X66 + (byte) 0XAA + 0X09 + 0X10 + En);
+        byte[] buffer = new byte[]{0X66, (byte) 0XAA, 0X09, 0X10, En, 00, 00, 00, CheckSum};
+        sendData(buffer);
+        return true;*/
     }
 
     public boolean sendGoHome() {
@@ -206,41 +212,55 @@ public class BluetoothPresenter implements Handler.Callback{
 
         int V1 = 0;
         int V2 = 0;
+        int V3 = 0;
         byte V1H = 0;
         byte V1L = 0;
         byte V2H = 0;
         byte V2L = 0;
+
+        //add全向
+        byte V3H = 0;
+        byte V3L = 0;
+
         byte CheckSum;
 
         if (action.equals(Command.ACTION_UP)) {
             V1 = changeV * 3 / 2;
             V2 = changeV * 3 / 2;
-            Log.i("test","up"+changeV);
+            V3 = changeV * 3 / 2;
+            Log.i("test","V1"+V1+"v2"+V2+"v3"+V3);
         } else if (action.equals(Command.ACTION_DOWN)) {
             V1 = -changeV;
             V2 = -changeV;
+            V3 = -changeV;
             Log.i("test","down"+changeV);
         } else if (action.equals(Command.ACTION_LEFT)) {
-            V1 = -changeV / 2;
+           /* V1 = -changeV / 2;
             V2 = changeV / 2;
-            Log.i("test","left"+changeV);
+            Log.i("test","left"+changeV);*/
         } else if (action.equals(Command.ACTION_RIGHT)) {
-            V1 = changeV / 2;
+            /*V1 = changeV / 2;
             V2 = -changeV / 2;
-            Log.i("right","right"+changeV);
+            Log.i("right","right"+changeV);*/
         } else if (action.equals(Command.ACTION_STOP)) {
             V1 = 0;
             V2 = 0;
+            V3 = 0;
             i=0;
         }
 
         V1H = (byte) (V1 >> 8);
         V2H = (byte) (V2 >> 8);
+
+        V3H = (byte) (V3 >> 8);
+
         V1L = (byte) (V1);
         V2L = (byte) (V2);
 
-        CheckSum = (byte) (0X66 + (byte) 0XAA + 0X09 + 0X11 + V1H + V1L + V2H + V2L);
-        byte[] buffer = new byte[]{0X66, (byte) 0XAA, 0X09, 0X11, V1H, V1L, V2H, V2L, CheckSum};
+        V3L = (byte)(V3);
+
+        CheckSum = (byte) (0X66 + (byte) 0XAA + 0X0B + 0X11 + V1H + V1L + V2H + V2L + V3H + V3L);
+        byte[] buffer = new byte[]{0X66, (byte) 0XAA, 0X0B, 0X11, V1H, V1L, V2H, V2L, V3H, V3L, CheckSum};
 
         sendData(buffer);
         return true;
@@ -251,13 +271,13 @@ public class BluetoothPresenter implements Handler.Callback{
     public void receivedData(byte[] data, String message) {
         if (!ENABLE) return;
 
-        if (data != null && data.length >= 0x22) {
+        if (data != null && data.length >= 0x0A) {//改为全向轮的长度
 
             final byte Head1 = data[0];
             final byte Head2 = data[1];
             final byte Length = data[2];
 
-            if (Head1 == ((byte) 0x88) && Head2 == ((byte) 0xBB) && Length == ((byte) 0x22)) {
+            if (Head1 == ((byte) 0x88) && Head2 == ((byte) 0xBB) && Length == ((byte) 0x0A)) {
 //                Bit 0	充电器是否接触，1：接触，0：未接触
 //                Bit 1	充电器是否连接，1：连接，0：未连接
 //                Bit 2	电机电源状态，1：打开，0：关闭
@@ -361,7 +381,7 @@ public class BluetoothPresenter implements Handler.Callback{
         //i = 0;
         final int[] Vtime = {42,84,126,168,210};
         mHandler = new Handler(this);
-        mHandler.sendEmptyMessageDelayed(1,200);
+        mHandler.sendEmptyMessageDelayed(1,1000);
         return V;
     }
 
@@ -373,11 +393,11 @@ public class BluetoothPresenter implements Handler.Callback{
                 i++;
                 V = Vtime[i];
                 Log.i("test",i+"*"+V+"@");
-                mHandler.sendEmptyMessageDelayed(1,200);
+                mHandler.sendEmptyMessageDelayed(1,1000);
             }else{
                 V = Vtime[4];
                 Log.i("test", i + "@@@" + V + "@@@");
-                mHandler.sendEmptyMessageDelayed(1,200);
+                mHandler.sendEmptyMessageDelayed(1,1000);
             }
         }
         return false;
