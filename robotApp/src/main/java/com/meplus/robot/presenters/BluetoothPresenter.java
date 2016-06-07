@@ -87,7 +87,7 @@ public class BluetoothPresenter implements Handler.Callback{
         bt.setOnDataReceivedListener((data, message) -> receivedData(data, message));
 
         mHandler = new Handler();
-        mHandler.sendEmptyMessageDelayed(1,200);
+        mHandler.sendEmptyMessageDelayed(1,500);
     }
 
     /**
@@ -361,7 +361,7 @@ public class BluetoothPresenter implements Handler.Callback{
         //i = 0;
         final int[] Vtime = {42,84,126,168,210};
         mHandler = new Handler(this);
-        mHandler.sendEmptyMessageDelayed(1,200);
+        mHandler.sendEmptyMessageDelayed(1,500);
         return V;
     }
 
@@ -373,11 +373,11 @@ public class BluetoothPresenter implements Handler.Callback{
                 i++;
                 V = Vtime[i];
                 Log.i("test",i+"*"+V+"@");
-                mHandler.sendEmptyMessageDelayed(1,200);
+                mHandler.sendEmptyMessageDelayed(1,500);
             }else{
                 V = Vtime[4];
                 Log.i("test", i + "@@@" + V + "@@@");
-                mHandler.sendEmptyMessageDelayed(1,200);
+                mHandler.sendEmptyMessageDelayed(1,500);
             }
         }
         return false;
