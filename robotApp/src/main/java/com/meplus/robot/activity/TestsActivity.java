@@ -12,9 +12,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.FireflyGPIO;
 import com.marvinlabs.intents.MediaIntents;
 import com.marvinlabs.intents.PhoneIntents;
 import com.meplus.activity.BaseActivity;
+import com.meplus.activity.IntentUtils;
 import com.meplus.avos.objects.AVOSRobot;
 import com.meplus.events.EventUtils;
 import com.meplus.presenters.AgoraPresenter;
@@ -26,6 +28,7 @@ import com.meplus.robot.app.MPApplication;
 import com.meplus.robot.events.BluetoothEvent;
 import com.meplus.robot.presenters.BluetoothPresenter;
 import com.meplus.robot.utils.SnackBarUtils;
+import com.test.TestActivity3;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -176,7 +179,7 @@ public class TestsActivity extends BaseActivity {
     }
 
     @OnClick({R.id.bluetooth_state, R.id.channel_test_button, R.id.bms_state,
-            R.id.net_test_button, R.id.echo_test_button, R.id.fab})
+            R.id.net_test_button, R.id.echo_test_button, R.id.fab, R.id.on})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bms_state:
@@ -202,11 +205,18 @@ public class TestsActivity extends BaseActivity {
                         .setAction(getString(R.string.me_ok), v -> startActivity(PhoneIntents.newCallNumberIntent(Constants.SERVICE_PHONENUMBER)))
                         .show();
                 break;
+
+           /* case R.id.on:
+                //com.meplus.utils.IntentUtils.generateIntent(this, FireflyGPIO.class);
+                *//*Intent intent = new Intent(this,TestActivity3.class);
+                startActivity(intent);*//*
+               *//* ToastUtils.show(this,"test");
+                break;*/
         }
     }
 
 
-    @OnTouch({R.id.left_button, R.id.up_button, R.id.right_button, R.id.down_button})
+    @OnTouch({R.id.left_button, R.id.up_button, R.id.right_button, R.id.down_button, R.id.on})
     public boolean onTouch(View view, MotionEvent event) {
         final int action = event.getAction();
         final int id = view.getId();
@@ -232,6 +242,7 @@ public class TestsActivity extends BaseActivity {
         switch (id) {
             case MotionEvent.ACTION_UP:
                 message = Command.ACTION_STOP;
+                ToastUtils.show(this, message);
                 break;
             case R.id.left_button:
                 message = Command.ACTION_LEFT;
@@ -245,6 +256,11 @@ public class TestsActivity extends BaseActivity {
             case R.id.down_button:
                 message = Command.ACTION_DOWN;
                 break;
+            ///////
+            case R.id.on:
+                message = Command.ACTION_ON;
+                ToastUtils.show(this, message + "#####");
+
         }
         return sendDirection(message);
     }

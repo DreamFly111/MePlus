@@ -154,6 +154,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 case Command.ACTION_RIGHT:
                 case Command.ACTION_DOWN:
                 case Command.ACTION_STOP:
+
+                case Command.ACTION_ON:
                     mPubnubPresenter.publish(getApplicationContext(), command.getMessage());
                     break;
                 case Command.ACTION_CALL:

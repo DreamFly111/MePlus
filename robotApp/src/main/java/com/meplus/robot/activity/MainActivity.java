@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.avos.avoscloud.AVException;
 import com.meplus.activity.BaseActivity;
 import com.meplus.avos.objects.AVOSRobot;
 import com.meplus.events.EventUtils;
@@ -33,9 +32,7 @@ import com.meplus.punub.CommandEvent;
 import com.meplus.punub.PubnubPresenter;
 import com.meplus.robot.R;
 import com.meplus.robot.app.MPApplication;
-import com.meplus.robot.avos.Robot;
 import com.meplus.robot.events.BluetoothEvent;
-import com.meplus.robot.events.FlagEvenet;
 import com.meplus.robot.presenters.BluetoothPresenter;
 import com.meplus.robot.viewholder.NavHeaderViewHolder;
 import com.meplus.robot.viewholder.QRViewHolder;
@@ -47,7 +44,6 @@ import com.meplus.speech.presents.TtsPresenter;
 import com.meplus.speech.presents.UnderstandPersenter;
 import com.meplus.utils.IntentUtils;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -323,6 +319,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 case Command.ACTION_RIGHT:
                 case Command.ACTION_DOWN:
                 case Command.ACTION_STOP:
+
+                case Command.ACTION_ON:
+                    Log.i("test-robot",message+"c-robot");
+                    ToastUtils.show(this,message+"client-robot");
                     if (!mBTPresenter.sendDirection(message)) {
                         ToastUtils.show(this, getString(R.string.bt_unconnected));
                     }

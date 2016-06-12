@@ -99,7 +99,8 @@
             android:layout_gravity="bottom|center_horizontal"
             android:minWidth="100dp"
             android:textColor="@color/meWhite"
-            android:textSize="@dimen/meTitleSize" />
+            android:textSize="@dimen/meTitleSize"
+            android:visibility="gone"/>
 
 
     </LinearLayout>

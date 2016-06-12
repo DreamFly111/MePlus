@@ -1,1 +1,1 @@
-include ':clientApp', ':robotApp', ':slamtecApp', ':fancyApp', ':agora', ':avos', ':pubnub', ':events', ':base', ':res', ':speech', ':bluetoothspp', ':zbar'
+include ':clientApp', ':robotApp', ':slamtecApp', ':fancyApp', ':agora', ':avos', ':pubnub', ':events', ':base', ':res', ':speech', ':bluetoothspp', ':zbar', ':Firefly'

@@ -14,6 +14,7 @@ import com.meplus.punub.CommandEvent;
 
 import butterknife.ButterKnife;
 import butterknife.OnTouch;
+import cn.trinea.android.common.util.ToastUtils;
 
 /**
  * 电话页面
@@ -33,7 +34,7 @@ public class CallActivity extends VideoActivity {
     }
 
 
-    @OnTouch({R.id.left_button, R.id.up_button, R.id.right_button, R.id.down_button})
+    @OnTouch({R.id.left_button, R.id.up_button, R.id.right_button, R.id.down_button,R.id.btn})
     public boolean onTouch(View view, MotionEvent event) {
         final int action = event.getAction();
         final int id = view.getId();
@@ -64,6 +65,11 @@ public class CallActivity extends VideoActivity {
             case R.id.down_button:
                 message = Command.ACTION_DOWN;
                 break;
+
+            case R.id.btn:
+                message = Command.ACTION_ON;
+                ToastUtils.show(this,message+"client");
+                break;
         }
         return postEvent(message);
     }
@@ -79,6 +85,4 @@ public class CallActivity extends VideoActivity {
         }
         return false;
     }
-
-
 }
